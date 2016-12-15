@@ -18,22 +18,7 @@ public class ImageClassifier {
 		n.percentizeFeatures();
 		n.printFeat();
 
-		// FileReader fr = new FileReader("digitdata/trainingimages.txt");
-		// BufferedReader br = new BufferedReader(fr);
-		// String s;
-		//
-		// int line = 0;
-		//
-		// while ((s = br.readLine()) != null) {
-		// if (line == 16) {
-		// break;
-		// }
-		// System.out.println(s);
-		// }
-		// while ((s = br.readLine()) != null) {
-		//
-		// System.out.println(s);
-		// }
+		
 	}
 
 }
