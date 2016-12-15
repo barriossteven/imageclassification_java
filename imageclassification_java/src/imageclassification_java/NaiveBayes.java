@@ -14,13 +14,20 @@ public class NaiveBayes {
 	/*************** Training Data *********************/
 	String trainingLabels = "digitdata/traininglabels.txt";
 	String trainingimages = "digitdata/trainingimages.txt";
+	/*************** Validation Data *********************/
+//	String trainingLabels = "digitdata/validationlabels.txt";
+//	String trainingimages = "digitdata/validationimages.txt";
+	/*************** Testing Data *********************/
+//	String testLabels = "digitdata/validationlabels.txt";
+//	String testimages = "digitdata/validationimages.txt";
 	/**************************************************/
 
 	// amounts is total amount of images for each label
 	// prior probs is P(Class_i)
 	int amounts[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	double priorProbs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int lineLength;
+	int lineLength=28;
+	int imageLength=28;
 
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
@@ -32,8 +39,7 @@ public class NaiveBayes {
 
 	/**************************************************/
 
-	public NaiveBayes(int lineLength) {
-		this.lineLength = lineLength;
+	public NaiveBayes() {
 		// initializes feature array
 		for (int i = 0; i < featProb.length; i++) {
 			// System.out.println(i);
@@ -83,7 +89,7 @@ public class NaiveBayes {
 			lineNum = 0;
 			index = Integer.parseInt(labelNum); // use index to access the class
 												// in the features array
-			while (lineNum < lineLength) {
+			while (lineNum < imageLength) {
 				imageLine = images.readLine();
 				if (imageLine == null) {
 					break;
@@ -116,7 +122,7 @@ public class NaiveBayes {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
 					featProb[i][j][k] = featProb[i][j][k] + .2; //this line is the smoothing variable K set to .2
-					featProb[i][j][k] = featProb[i][j][k] / amounts[i];
+					featProb[i][j][k] = featProb[i][j][k] / (double)amounts[i];
 				}
 			}
 		}
@@ -139,12 +145,12 @@ public class NaiveBayes {
 		BufferedReader testimages = new BufferedReader(fr1);
 		ArrayList<Integer> tempResults = new ArrayList<Integer>();
 
-		String currentImage[] = new String[lineLength];
+		String currentImage[] = new String[imageLength];
 		int lineNum = 0;
 		String images;
 		while (true) {
 			lineNum = 0;
-			while (lineNum < lineLength) {
+			while (lineNum < imageLength) {
 				if ((images = testimages.readLine()) == null) {
 					fr1.close();
 					testimages.close();
@@ -161,7 +167,7 @@ public class NaiveBayes {
 	}
 
 	public int getArgMax(String image[]) {
-		char features[][] = new char[lineLength][lineLength];
+		char features[][] = new char[imageLength][lineLength];
 		int currMax = 0;
 		double currMaxVal = 0;
 		double tempVal = 0;
@@ -174,7 +180,7 @@ public class NaiveBayes {
 		// if higher than current max and make it new max if higher
 		for (int i = 0; i < amounts.length; i++) {
 			tempVal = 0;
-			for (int j = 0; j < lineLength; j++) {
+			for (int j = 0; j < imageLength; j++) {
 				for (int k = 0; k < lineLength; k++) {
 					if (features[j][k] != ' ') {
 						// System.out.println(featProb[i][j][k]);
@@ -212,7 +218,8 @@ public class NaiveBayes {
 		
 		fr.close();
 		br.close();
-
+//		System.out.println("testResults size: " + testResults.size());
+//		System.out.println("i size: " + i );
 		return (rate/testResults.size())*100;
 
 	}

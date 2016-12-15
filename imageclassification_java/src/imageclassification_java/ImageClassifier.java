@@ -10,26 +10,29 @@ public class ImageClassifier {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		// take test images and gather their features
-		// each row is 28 chars in length
-		// each digit is about 28x28(includes right padding)
-		// some are 14 instead of 20
+		// each image is heightXwidth
+		// each digit is 28x28
+		// each face is 70x60
 		
-		ArrayList<Integer> results = new ArrayList<Integer>();
+		double rateFace_nb;
+		double rateDigit_nb;
 		
-		NaiveBayes n = new NaiveBayes(28);
+		NaiveBayesFace n2 = new NaiveBayesFace();
+		n2.getPrior();
+		n2.getFeatures();
+		n2.percentizeFeatures();
+		n2.testDataExtracter();
+		rateFace_nb = n2.getRate();
+		System.out.println("NaiveBayes Face Success Rate: " + rateFace_nb);
+		
+		NaiveBayes n = new NaiveBayes();
 		n.getPrior();
 		n.getFeatures();
 		n.percentizeFeatures();
-		//n.printFeat();
 		n.testDataExtracter();
-		double rate = n.getRate();
-		System.out.println(rate);
-//		for(int i = 0;i<results.size();i++){
-//			System.out.println(results.get(i).toString());
-//		}
+		rateDigit_nb = n.getRate();
+		System.out.println("NaiveBayes Digit Success Rate: " + rateDigit_nb);
 
-		
 	}
 
 }
