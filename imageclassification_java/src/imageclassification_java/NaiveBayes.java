@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class NaiveBayes {
 	/*************** Testing Data *********************/
@@ -131,36 +132,87 @@ public class NaiveBayes {
 		}
 	}
 
-	public ArrayList<Integer> testDataExtracter() throws IOException {
+	public void testDataExtracter() throws IOException {
 		FileReader fr1 = new FileReader(testimages);
 		BufferedReader testimages = new BufferedReader(fr1);
 		ArrayList<Integer> tempResults = new ArrayList<Integer>();
-		
+
 		String currentImage[] = new String[lineLength];
 		int lineNum = 0;
 		String images;
-		while(true){
+		while (true) {
 			lineNum = 0;
-			System.out.println("*******************");
-			while (lineNum<lineLength ) {
-				if((images = testimages.readLine()) == null){
+			while (lineNum < lineLength) {
+				if ((images = testimages.readLine()) == null) {
 					fr1.close();
 					testimages.close();
-					return tempResults;
+					testResults = tempResults;
+					return;
 				}
-				System.out.println(images);
+				// System.out.println(images);
 				currentImage[lineNum] = images;
 				lineNum++;
 			}
-			//call getArgMax
+			// call getArgMax
+			tempResults.add(getArgMax(currentImage));
 		}
 	}
-	
-	public int getArmMax(String image[]){
-		
-		return 0;
-	}
-	
 
+	public int getArgMax(String image[]) {
+		char features[][] = new char[lineLength][lineLength];
+		int currMax = 0;
+		double currMaxVal = 0;
+		double tempVal = 0;
+
+		for (int i = 0; i < features.length; i++) {
+			features[i] = image[i].toCharArray();
+			// System.out.println(features[i]);
+		}
+		// iterate for each class and find the value, after each iteration check
+		// if higher than current max and make it new max if higher
+		for (int i = 0; i < amounts.length; i++) {
+			tempVal = 0;
+			for (int j = 0; j < lineLength; j++) {
+				for (int k = 0; k < lineLength; k++) {
+					if (features[j][k] != ' ') {
+						// System.out.println(featProb[i][j][k]);
+						tempVal = tempVal + (Math.log(featProb[i][j][k]) / Math.log(2));
+						// System.out.println(features[j][k]);
+					} else {
+						// System.out.println(featProb[i][j][k]);
+						tempVal = tempVal + (Math.log((1 - featProb[i][j][k])) / Math.log(2));
+					}
+				}
+			}
+			tempVal = tempVal + (Math.log(priorProbs[i]) / Math.log(2));
+			if (tempVal > currMaxVal || i == 0) {
+				currMaxVal = tempVal;
+				currMax = i;
+			}
+		}
+		return currMax;
+	}
+
+	public double getRate() throws IOException {
+		FileReader fr = new FileReader(testLabels);
+		BufferedReader br = new BufferedReader(fr);
+		double rate = 0;
+		int i= 0;
+		String s;
+		while ((s = br.readLine()) != null) {
+			int correctLabel = Integer.parseInt(s);
+			if(testResults.get(i) == correctLabel){
+				rate++;
+			}
+			i++;
+		}
+	
+		
+		fr.close();
+		br.close();
+
+		return (rate/testResults.size())*100;
+
+	}
 
 }
