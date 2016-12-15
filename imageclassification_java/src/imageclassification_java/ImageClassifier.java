@@ -16,7 +16,8 @@ public class ImageClassifier {
 		n.getPrior();
 		n.getFeatures();
 		n.percentizeFeatures();
-		n.printFeat();
+		//n.printFeat();
+		n.testDataExtracter();
 
 		
 	}

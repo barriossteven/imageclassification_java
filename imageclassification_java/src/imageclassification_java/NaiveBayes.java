@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class NaiveBayes {
 	/*************** Testing Data *********************/
@@ -13,18 +14,23 @@ public class NaiveBayes {
 	String trainingLabels = "digitdata/traininglabels.txt";
 	String trainingimages = "digitdata/trainingimages.txt";
 	/**************************************************/
-	
+
 	// amounts is total amount of images for each label
 	// prior probs is P(Class_i)
 	int amounts[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	double priorProbs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	int lineLength = 28;
+
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
 	double featProb[][][] = new double[10][28][28];
 
-	
-	
+	/*************** Testing Results *********************/
+	// data structures to hold test results
+	ArrayList<Integer> testResults;
+
+	/**************************************************/
+
 	public NaiveBayes() {
 		// initializes feature array
 		for (int i = 0; i < featProb.length; i++) {
@@ -100,14 +106,14 @@ public class NaiveBayes {
 		fr2.close();
 		labels.close();
 		images.close();
-	
+
 	}
 
 	public void percentizeFeatures() {
 		for (int i = 0; i < featProb.length; i++) {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
-					featProb[i][j][k] = featProb[i][j][k]/amounts[i];
+					featProb[i][j][k] = featProb[i][j][k] / amounts[i];
 				}
 			}
 		}
@@ -124,13 +130,37 @@ public class NaiveBayes {
 			}
 		}
 	}
-	
-	
-	public void testData(){
+
+	public ArrayList<Integer> testDataExtracter() throws IOException {
+		FileReader fr1 = new FileReader(testimages);
+		BufferedReader testimages = new BufferedReader(fr1);
+		ArrayList<Integer> tempResults = new ArrayList<Integer>();
 		
+		String currentImage[] = new String[lineLength];
+		int lineNum = 0;
+		String images;
+		while(true){
+			lineNum = 0;
+			System.out.println("*******************");
+			while (lineNum<lineLength ) {
+				if((images = testimages.readLine()) == null){
+					fr1.close();
+					testimages.close();
+					return tempResults;
+				}
+				System.out.println(images);
+				currentImage[lineNum] = images;
+				lineNum++;
+			}
+			//call getArgMax
+		}
 	}
 	
+	public int getArmMax(String image[]){
+		
+		return 0;
+	}
 	
-	
+
 
 }
