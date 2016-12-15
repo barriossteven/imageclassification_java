@@ -1,8 +1,11 @@
 package imageclassification_java;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class NaiveBayesFace {
@@ -20,7 +23,9 @@ public class NaiveBayesFace {
 	double priorProb[] = {0,0};
 	int lineLength = 60;
 	int imageLength = 70;
-
+	double percent = 100;
+	int sizeAllowed;
+	
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
 	double featProb[][][] = new double[2][70][60];
@@ -31,7 +36,8 @@ public class NaiveBayesFace {
 
 	/**************************************************/
 
-	public NaiveBayesFace() {
+	public NaiveBayesFace(double percent) {
+		this.percent = percent;
 		for(int i = 0; i< featProb.length;i++){
 			//System.out.println(i);
 			for (int j = 0; j < featProb[i].length; j++) {
@@ -43,12 +49,19 @@ public class NaiveBayesFace {
 			}
 		}
 	}
+	public void determineTraining() throws IOException{
+		sizeAllowed = (int)((double)countLines()*percent);
+		
+	}
 
 	public void getPrior() throws IOException {
 		FileReader fr = new FileReader(trainingLabels);
 		BufferedReader br = new BufferedReader(fr);
+		determineTraining();
+		//System.out.println("Lines allowed: "+sizeAllowed);
 		String s;
-		while ((s = br.readLine()) != null) {
+		int count = 0;
+		while ((s = br.readLine()) != null && count<sizeAllowed) {
 			int label = Integer.parseInt(s);
 			if (label == 0) {
 				// label is not face
@@ -62,6 +75,7 @@ public class NaiveBayesFace {
 				System.out.println("error");
 				break;
 			}
+			count++;
 		}
 		this.priorProb[0] = (double) amounts[0] / totalLabels;
 		this.priorProb[1] = (double) amounts[1] / totalLabels;
@@ -88,12 +102,12 @@ public class NaiveBayesFace {
 		String imageLine;
 		int index;
 		char[] charArrayLine;
-
-		while ((labelNum = labels.readLine()) != null) {
+		int count = 0;
+		while ((labelNum = labels.readLine()) != null && count<sizeAllowed) {
 			total++;
 			lineNum = 0;
 			index = Integer.parseInt(labelNum); // use index to access the class
-												// in the features array
+			count++;									// in the features array
 			while (lineNum < imageLength) {
 				imageLine = images.readLine();
 				if (imageLine == null) {
@@ -231,7 +245,26 @@ public class NaiveBayesFace {
 
 	}
 	
-	
+	public int countLines() throws IOException {
+	    InputStream is = new BufferedInputStream(new FileInputStream(trainingLabels));
+	    try {
+	        byte[] c = new byte[1024];
+	        int count = 0;
+	        int readChars = 0;
+	        boolean empty = true;
+	        while ((readChars = is.read(c)) != -1) {
+	            empty = false;
+	            for (int i = 0; i < readChars; ++i) {
+	                if (c[i] == '\n') {
+	                    ++count;
+	                }
+	            }
+	        }
+	        return (count == 0 && !empty) ? 1 : count;
+	    } finally {
+	        is.close();
+	    }
+	}
 	
 	
 	

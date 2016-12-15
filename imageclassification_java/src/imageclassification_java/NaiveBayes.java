@@ -1,9 +1,12 @@
 package imageclassification_java;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,6 +31,8 @@ public class NaiveBayes {
 	double priorProbs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	int lineLength=28;
 	int imageLength=28;
+	double percent = 100;
+	int sizeAllowed;
 
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
@@ -39,7 +44,8 @@ public class NaiveBayes {
 
 	/**************************************************/
 
-	public NaiveBayes() {
+	public NaiveBayes(double percent) {
+		this.percent = percent;
 		// initializes feature array
 		for (int i = 0; i < featProb.length; i++) {
 			// System.out.println(i);
@@ -50,18 +56,27 @@ public class NaiveBayes {
 			}
 		}
 	}
+	
+	public void determineTraining() throws IOException{
+		sizeAllowed = (int)((double)countLines()*percent);
+		
+	}
 
 	public void getPrior() throws IOException {
 		FileReader fr = new FileReader(trainingLabels);
 		BufferedReader br = new BufferedReader(fr);
+		determineTraining();
+		//System.out.println("Lines allowed: "+sizeAllowed);
 		String s;
-		while ((s = br.readLine()) != null) {
+		int count = 0;
+		while ((s = br.readLine()) != null && count <sizeAllowed) {
 			if (s.trim().isEmpty()) {
 				continue;
 			}
 			int label = Integer.parseInt(s);
 			this.amounts[label] = amounts[label] + 1;
 			this.totalLabels++;
+			count++;
 		}
 		for (int i = 0; i < amounts.length; i++) {
 			priorProbs[i] = (double) amounts[i] / totalLabels;
@@ -83,12 +98,12 @@ public class NaiveBayes {
 		String imageLine;
 		int index;
 		char[] charArrayLine;
-
-		while ((labelNum = labels.readLine()) != null) {
+		int count = 0;
+		while ((labelNum = labels.readLine()) != null && count<sizeAllowed) {
 			total++;
 			lineNum = 0;
 			index = Integer.parseInt(labelNum); // use index to access the class
-												// in the features array
+			count++;									// in the features array
 			while (lineNum < imageLength) {
 				imageLine = images.readLine();
 				if (imageLine == null) {
@@ -222,6 +237,27 @@ public class NaiveBayes {
 //		System.out.println("i size: " + i );
 		return (rate/testResults.size())*100;
 
+	}
+	
+	public int countLines() throws IOException {
+	    InputStream is = new BufferedInputStream(new FileInputStream(trainingLabels));
+	    try {
+	        byte[] c = new byte[1024];
+	        int count = 0;
+	        int readChars = 0;
+	        boolean empty = true;
+	        while ((readChars = is.read(c)) != -1) {
+	            empty = false;
+	            for (int i = 0; i < readChars; ++i) {
+	                if (c[i] == '\n') {
+	                    ++count;
+	                }
+	            }
+	        }
+	        return (count == 0 && !empty) ? 1 : count;
+	    } finally {
+	        is.close();
+	    }
 	}
 
 }
