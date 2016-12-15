@@ -34,7 +34,7 @@ public class ImageClassifier {
 
 		percent = .1;
 		for (int i = 0; i < 10; i++) {
-			System.out.println("Percent for training: " + ((i)*10) + "%");
+			System.out.println("Percent for training: " + ((i+1)*10) + "%");
 			NaiveBayes n = new NaiveBayes(percent);
 			n.getPrior();
 			n.getFeatures();
