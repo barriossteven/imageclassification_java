@@ -17,7 +17,7 @@ public class ImageClassifier {
 		
 		ArrayList<Integer> results = new ArrayList<Integer>();
 		
-		NaiveBayes n = new NaiveBayes();
+		NaiveBayes n = new NaiveBayes(28);
 		n.getPrior();
 		n.getFeatures();
 		n.percentizeFeatures();

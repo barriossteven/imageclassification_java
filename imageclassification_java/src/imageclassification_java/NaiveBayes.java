@@ -20,7 +20,7 @@ public class NaiveBayes {
 	// prior probs is P(Class_i)
 	int amounts[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	double priorProbs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int lineLength = 28;
+	int lineLength;
 
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
@@ -32,7 +32,8 @@ public class NaiveBayes {
 
 	/**************************************************/
 
-	public NaiveBayes() {
+	public NaiveBayes(int lineLength) {
+		this.lineLength = lineLength;
 		// initializes feature array
 		for (int i = 0; i < featProb.length; i++) {
 			// System.out.println(i);
@@ -114,6 +115,7 @@ public class NaiveBayes {
 		for (int i = 0; i < featProb.length; i++) {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
+					featProb[i][j][k] = featProb[i][j][k] + .2; //this line is the smoothing variable K set to .2
 					featProb[i][j][k] = featProb[i][j][k] / amounts[i];
 				}
 			}
