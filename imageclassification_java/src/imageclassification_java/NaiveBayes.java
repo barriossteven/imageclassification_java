@@ -137,7 +137,7 @@ public class NaiveBayes {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
 					featProb[i][j][k] = featProb[i][j][k] + .2; //this line is the smoothing variable K set to .2
-					featProb[i][j][k] = featProb[i][j][k] / (double)amounts[i];
+					featProb[i][j][k] = featProb[i][j][k] / ((double)amounts[i]+.2);
 				}
 			}
 		}
@@ -195,8 +195,23 @@ public class NaiveBayes {
 		// if higher than current max and make it new max if higher
 		for (int i = 0; i < amounts.length; i++) {
 			tempVal = 0;
+			tempVal = calculateLogJointProbabilities(features,i);
+			if (tempVal > currMaxVal || i == 0) {
+				currMaxVal = tempVal;
+				currMax = i;
+			}
+		}
+		return currMax;
+	}
+	
+	public double calculateLogJointProbabilities(char features[][],int i){
+		double tempVal = 0;
+		
+		// iterate for each class and find the value, after each iteration check
+		// if higher than current max and make it new max if higher
 			for (int j = 0; j < imageLength; j++) {
 				for (int k = 0; k < lineLength; k++) {
+					//System.out.println(j+","+k);
 					if (features[j][k] != ' ') {
 						// System.out.println(featProb[i][j][k]);
 						tempVal = tempVal + (Math.log(featProb[i][j][k]) / Math.log(2));
@@ -207,14 +222,13 @@ public class NaiveBayes {
 					}
 				}
 			}
-			tempVal = tempVal + (Math.log(priorProbs[i]) / Math.log(2));
-			if (tempVal > currMaxVal || i == 0) {
-				currMaxVal = tempVal;
-				currMax = i;
-			}
-		}
-		return currMax;
+			tempVal = tempVal + (Math.log(priorProbs[i]) / Math.log(2));//calculates log joint probability
+		return tempVal;
 	}
+	
+	
+	
+	
 
 	public double getRate() throws IOException {
 		FileReader fr = new FileReader(testLabels);

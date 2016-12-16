@@ -17,19 +17,19 @@ public class ImageClassifier {
 		double rateFace_nb;
 		double rateDigit_nb;
 		double percent = .1;
-		for (int i = 0; i < 10; i++) {
-			System.out.println("Percent for training: " + ((i+1)*10) +"%");
-			NaiveBayesFace n2 = new NaiveBayesFace(percent);
-			n2.getPrior();
-			n2.getFeatures();
-			n2.percentizeFeatures();
-			n2.testDataExtracter();
-			rateFace_nb = n2.getRate();
-			//System.out.println("numlines: " + n2.countLines());
-			System.out.println("NaiveBayes Face Success Rate: " +String.format( "%.2f",  rateFace_nb)+"%");
-			System.out.println();
-			percent = percent + .1;
-		}
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println("Percent for training: " + ((i+1)*10) +"%");
+//			NaiveBayesFace n2 = new NaiveBayesFace(percent);
+//			n2.getPrior();
+//			n2.getFeatures();
+//			n2.percentizeFeatures();
+//			n2.testDataExtracter();
+//			rateFace_nb = n2.getRate();
+//			//System.out.println("numlines: " + n2.countLines());
+//			System.out.println("NaiveBayes Face Success Rate: " +String.format( "%.2f",  rateFace_nb)+"%");
+//			System.out.println();
+//			percent = percent + .1;
+//		}
 		System.out.println("*****************************************************");
 
 		percent = .1;
