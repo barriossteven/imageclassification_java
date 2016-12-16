@@ -15,8 +15,13 @@ public class NaiveBayesFace {
 	/*************** Training Data *********************/
 	String trainingLabels = "facedata/facedatatrainlabels.txt";
 	String trainingimages = "facedata/facedatatrain.txt";
+	/*************** Validation Data *********************/
+//	String trainingLabels = "facedata/validationlabels.txt";
+//	String trainingimages = "facedata/validationimages.txt";
+	/*************** Testing Data *********************/
+//	String testLabels = "facedata/validationlabels.txt";
+//	String testimages = "facedata/validation.txt";
 	/**************************************************/
-
 	// amounts is total amount of images for each label
 	// prior probs is P(Class_i)
 	int amounts[] = {0,0};
@@ -25,6 +30,7 @@ public class NaiveBayesFace {
 	int imageLength = 70;
 	double percent = 100;
 	int sizeAllowed;
+	double smooth;
 	
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
@@ -38,6 +44,21 @@ public class NaiveBayesFace {
 
 	public NaiveBayesFace(double percent) {
 		this.percent = percent;
+		this.smooth = .9;
+		for(int i = 0; i< featProb.length;i++){
+			//System.out.println(i);
+			for (int j = 0; j < featProb[i].length; j++) {
+				for (int k = 0; k < featProb[i][j].length; k++) {
+					featProb[i][j][k] = 0;
+					//System.out.print(j+","+k);
+				}
+				//System.out.println();
+			}
+		}
+	}
+	public NaiveBayesFace(double percent,double smooth) {
+		this.percent = percent;
+		this.smooth = smooth;
 		for(int i = 0; i< featProb.length;i++){
 			//System.out.println(i);
 			for (int j = 0; j < featProb[i].length; j++) {
@@ -140,8 +161,8 @@ public class NaiveBayesFace {
 		for (int i = 0; i < featProb.length; i++) {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
-					featProb[i][j][k] = featProb[i][j][k] + .9; //this line is the smoothing variable K set to .9
-					featProb[i][j][k] = featProb[i][j][k] / (double)amounts[i];
+					featProb[i][j][k] = featProb[i][j][k] + smooth; //this line is the smoothing variable K set to .9
+					featProb[i][j][k] = featProb[i][j][k] / ((double)amounts[i]+smooth);
 				}
 			}
 		}
@@ -273,6 +294,21 @@ public class NaiveBayesFace {
 	    } finally {
 	        is.close();
 	    }
+	}
+	
+	public double[][] oddsRatio(int label1, int label2){
+		double temp[][] = new double[70][60];
+		for(int i=0;i<temp.length;i++){
+			for(int j=0;j<temp[i].length;j++){
+				temp[i][j] = (featProb[label1][i][j]/featProb[label2][i][j]);
+				System.out.print(temp[i][j]);
+			}
+			System.out.println();
+		}
+		
+		
+		
+		return null;
 	}
 	
 	

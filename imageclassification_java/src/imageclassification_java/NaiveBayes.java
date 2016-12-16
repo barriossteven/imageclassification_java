@@ -33,6 +33,7 @@ public class NaiveBayes {
 	int imageLength=28;
 	double percent = 100;
 	int sizeAllowed;
+	double smooth;
 
 	int totalLabels = 0;
 	// arrays for each class's feature probabilities
@@ -46,6 +47,20 @@ public class NaiveBayes {
 
 	public NaiveBayes(double percent) {
 		this.percent = percent;
+		this.smooth = .2;
+		// initializes feature array
+		for (int i = 0; i < featProb.length; i++) {
+			// System.out.println(i);
+			for (int j = 0; j < featProb[i].length; j++) {
+				for (int k = 0; k < featProb[i][j].length; k++) {
+					featProb[i][j][k] = 0;
+				}
+			}
+		}
+	}
+	public NaiveBayes(double percent,double smooth) {
+		this.percent = percent;
+		this.smooth = smooth;
 		// initializes feature array
 		for (int i = 0; i < featProb.length; i++) {
 			// System.out.println(i);
@@ -136,8 +151,8 @@ public class NaiveBayes {
 		for (int i = 0; i < featProb.length; i++) {
 			for (int j = 0; j < featProb[i].length; j++) {
 				for (int k = 0; k < featProb[i][j].length; k++) {
-					featProb[i][j][k] = featProb[i][j][k] + .2; //this line is the smoothing variable K set to .2
-					featProb[i][j][k] = featProb[i][j][k] / ((double)amounts[i]+.2);
+					featProb[i][j][k] = featProb[i][j][k] + smooth; //this line is the smoothing variable K set to .2
+					featProb[i][j][k] = featProb[i][j][k] / ((double)amounts[i]+smooth);
 				}
 			}
 		}
@@ -272,6 +287,21 @@ public class NaiveBayes {
 	    } finally {
 	        is.close();
 	    }
+	}
+	
+	public double[][] oddsRatio(int label1, int label2){
+		double temp[][] = new double[28][28];
+		for(int i=0;i<temp.length;i++){
+			for(int j=0;j<temp[i].length;j++){
+				temp[i][j] = (featProb[label1][i][j]/featProb[label2][i][j]);
+				System.out.print(temp[i][j]);
+			}
+			System.out.println();
+		}
+		
+		
+		
+		return null;
 	}
 
 }
