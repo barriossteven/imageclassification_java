@@ -11,18 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class NaiveBayes {
-	/*************** Testing Data *********************/
-	String testLabels = "digitdata/testlabels.txt";
-	String testimages = "digitdata/testimages.txt";
 	/*************** Training Data *********************/
 	String trainingLabels = "digitdata/traininglabels.txt";
 	String trainingimages = "digitdata/trainingimages.txt";
 	/*************** Validation Data *********************/
-//	String trainingLabels = "digitdata/validationlabels.txt";
-//	String trainingimages = "digitdata/validationimages.txt";
+	String validationLabels = "digitdata/validationlabels.txt";
+	String validationimages = "digitdata/validationimages.txt";
 	/*************** Testing Data *********************/
-//	String testLabels = "digitdata/validationlabels.txt";
-//	String testimages = "digitdata/validationimages.txt";
+	String testLabels = "digitdata/validationlabels.txt";
+	String testimages = "digitdata/validationimages.txt";
 	/**************************************************/
 
 	// amounts is total amount of images for each label
@@ -76,7 +73,26 @@ public class NaiveBayes {
 		sizeAllowed = (int)((double)countLines()*percent);
 		
 	}
-
+	
+	public void run() throws IOException{
+		double rate;
+		
+		System.out.println("Percent for training: " + (percent * 100) + "%");
+		System.out.println("Training...");
+		getPrior();
+		getFeatures();
+		percentizeFeatures();
+		System.out.println("Validating...");
+		testDataExtracter(validationimages);
+		rate = getRate(validationLabels);
+		System.out.println("Testing...");
+		testDataExtracter(testimages);
+		rate = getRate(testLabels);
+		System.out.println("NaiveBayes Digit Success Rate: " + String.format("%.2f", rate) + "%");
+		System.out.println();
+		//oddsRatio(3,6);
+	}
+	
 	public void getPrior() throws IOException {
 		FileReader fr = new FileReader(trainingLabels);
 		BufferedReader br = new BufferedReader(fr);
@@ -170,11 +186,11 @@ public class NaiveBayes {
 		}
 	}
 
-	public void testDataExtracter() throws IOException {
-		FileReader fr1 = new FileReader(testimages);
+	public void testDataExtracter(String imagesPath) throws IOException {
+		FileReader fr1 = new FileReader(imagesPath);
 		BufferedReader testimages = new BufferedReader(fr1);
 		ArrayList<Integer> tempResults = new ArrayList<Integer>();
-
+		testResults = null;
 		String currentImage[] = new String[imageLength];
 		int lineNum = 0;
 		String images;
@@ -245,8 +261,8 @@ public class NaiveBayes {
 	
 	
 
-	public double getRate() throws IOException {
-		FileReader fr = new FileReader(testLabels);
+	public double getRate(String labelsPath) throws IOException {
+		FileReader fr = new FileReader(labelsPath);
 		BufferedReader br = new BufferedReader(fr);
 		double rate = 0;
 		int i= 0;
