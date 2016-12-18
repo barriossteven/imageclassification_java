@@ -79,9 +79,16 @@ public class NaiveBayes {
 		
 		System.out.println("Percent for training: " + (percent * 100) + "%");
 		System.out.println("Training...");
+		
+		long tStart = System.currentTimeMillis();
 		getPrior();
 		getFeatures();
 		percentizeFeatures();
+		long tEnd = System.currentTimeMillis();
+		long tDelta = tEnd - tStart;
+		double elapsedSeconds = tDelta / 1000.0;
+		System.out.println("Elapsed time for training: " + elapsedSeconds);
+		
 		System.out.println("Validating...");
 		testDataExtracter(validationimages);
 		rate = getRate(validationLabels);

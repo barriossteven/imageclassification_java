@@ -99,6 +99,8 @@ public class Perceptron {
 		
 		int totalLines = (int)(countLines()*percent);
 		int linesRead = 0;
+		long tStart = System.currentTimeMillis();
+		
 		for (int i = 0; i < iterations; i++) {
 			fr1 = new FileReader(trainingLabels);
 			tLabels = new BufferedReader(fr1);
@@ -134,7 +136,11 @@ public class Perceptron {
 			//System.out.println(correct / 5000);
 			correct = 0;
 		}
-
+		
+		long tEnd = System.currentTimeMillis();
+		long tDelta = tEnd - tStart;
+		double elapsedSeconds = tDelta / 1000.0;
+		System.out.println("Elapsed time for training: " + elapsedSeconds);
 		// printWeights();
 	}
 

@@ -99,6 +99,7 @@ public class Mira {
 
 		int totalLines = (int) (countLines() * percent);
 		int linesRead = 0;
+		long tStart = System.currentTimeMillis();
 		for (int i = 0; i < iterations; i++) {
 			fr1 = new FileReader(trainingLabels);
 			tLabels = new BufferedReader(fr1);
@@ -134,6 +135,11 @@ public class Mira {
 			// System.out.println(correct / 5000);
 			correct = 0;
 		}
+		
+		long tEnd = System.currentTimeMillis();
+		long tDelta = tEnd - tStart;
+		double elapsedSeconds = tDelta / 1000.0;
+		System.out.println("Elapsed time for training: " + elapsedSeconds);
 
 		// printWeights();
 	}
@@ -178,6 +184,18 @@ public class Mira {
 
 	public void adjustWeights(int correct, int guessed, char[][] features) {
 		double currChar;
+		double temp;
+		double bottom = 0;
+		for(int i = 0; i<features.length;i++){
+			for(int j = 0; j < features[i].length;j++){
+				if (features[i][j] == ' ') {
+					temp = 0;
+				} else {
+					temp = 1;
+				}
+				bottom = bottom + Math.pow(temp, 2); 
+			}
+		}
 
 		double constant = 0.001;
 		for (int j = 0; j < weights[correct].length; j++) {
@@ -188,8 +206,10 @@ public class Mira {
 					currChar = 1;
 				}
 
-				double mira = ((weights[guessed][j][k] - weights[correct][j][k]) * features[j][k] + 1)
-						/ (2 * Math.pow((features[j][0] + features[0][k]), 2));
+				//double mira = ((weights[guessed][j][k] - weights[correct][j][k]) * features[j][k] + 1)
+					//	/ (2 * Math.pow((features[j][0] + features[0][k]), 2));
+				double mira = (((weights[guessed][j][k] - weights[correct][j][k]) * features[j][k]) + 1)
+					/ (2 *bottom);
 				weights[correct][j][k] = weights[correct][j][k] + (Math.min(constant, mira) * currChar);// adjustment
 				weights[guessed][j][k] = weights[guessed][j][k] - (Math.min(constant, mira) * currChar);// adjustment
 			}

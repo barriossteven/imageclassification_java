@@ -17,7 +17,7 @@ public class ImageClassifier {
 		//showPercentNaives();
 		
 		
-		//runNBDigits(1);
+		runNBDigits(1);
 		runPerceptron("digit",3,1);
 		//runNBFace(1);
 		//runPerceptron("face",3,1);
