@@ -264,6 +264,8 @@ public class Mira {
 
 		if (testing) {
 			System.out.println("Mira Success Rate: " + String.format("%.2f", 100 * (v_correct / totalLabels)) + "%");
+			System.out.println("error rate :" + String.format("%.2f", 100-100*(v_correct/totalLabels)) + "%");
+
 			System.out.println();
 		}
 
