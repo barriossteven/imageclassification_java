@@ -17,20 +17,32 @@ public class ImageClassifier {
 		//showPercentNaives();
 		
 		
-		runNBDigits(1);
+		//runNBDigits(1);
 		runPerceptron("digit",3,1);
-		runNBFace(1);
-		runPerceptron("face",3,1);
-		
+		//runNBFace(1);
+		//runPerceptron("face",3,1);
+		runMira("digit",3,1);
+		//runMira("face",3,1);
 
 	}
 	
+	public static void runMira(String labelType, int iterations,double percent) throws NumberFormatException, IOException{
+		Mira m;
+		if(labelType.equals("face")){
+			m = new Mira(0,iterations,percent);
+		}else if(labelType.equals("digit")){ 
+			m = new Mira(1,iterations,percent);
+		}else {
+			return;
+		}
+		
+	}
 	
 	public static void runPerceptron(String labelType, int iterations,double percent) throws NumberFormatException, IOException{
 		Perceptron p;
 		if(labelType.equals("face")){
 			p = new Perceptron(0,iterations,percent);
-		}else if(labelType.equals("digit")){
+		}else if(labelType.equals("digit")){ 
 			p = new Perceptron(1,iterations,percent);
 		}else {
 			return;
