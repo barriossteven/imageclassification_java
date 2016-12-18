@@ -96,6 +96,7 @@ public class NaiveBayes {
 		testDataExtracter(testimages);
 		rate = getRate(testLabels);
 		System.out.println("NaiveBayes Digit Success Rate: " + String.format("%.2f", rate) + "%");
+		System.out.println("error rate :" + String.format("%.2f", 100-rate) + "%");
 		System.out.println();
 		//oddsRatio(3,6);
 	}
