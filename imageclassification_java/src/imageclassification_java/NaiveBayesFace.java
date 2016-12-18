@@ -93,6 +93,7 @@ public class NaiveBayesFace {
 		testDataExtracter(testimages);
 		rate = getRate(testLabels);
 		System.out.println("NaiveBayes Face Success Rate: " + String.format("%.2f", rate) + "%");
+		System.out.println("error rate :" + String.format("%.2f", 100-rate) + "%");
 		System.out.println();
 		// n2.oddsRatio(0,1);
 	}
